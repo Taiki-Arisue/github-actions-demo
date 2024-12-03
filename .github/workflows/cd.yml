@@ -1,0 +1,43 @@
+# ワークフローの名前
+name: CD
+
+# トリガー / このワークフローが実行される条件を指定
+on:
+  # 他のワークフローの結果をトリガーとして、このワークフローを実行
+  workflow_run:
+    workflows:
+      - "CI" # 対象のワークフロー名
+    types:
+      - completed # 対象ワークフローが完了（completed）したタイミングで、このワークフローを実行
+
+# ジョブ / ワークフロー実行は、既定で並列実行される 1 つ以上の jobs で構成される
+jobs:
+
+  # ジョブの名前を deploy に指定
+  deploy:
+    # 実行環境を指定
+    runs-on: ubuntu-latest
+    # このジョブのタイムアウト時間を60分に設定
+    timeout-minutes: 60
+    # 1 つのジョブには、steps と呼ばれる一連のタスクがある
+    # ステップでは、コマンドを実行する、設定タスクを実行する、
+    # あるいはリポジトリやパブリックリポジトリ、Dockerレジストリで公開されたアクションを実行することができる
+    steps:
+      # usesでアクションを指定する
+      # 「誰かか作った処理をそのままワークフローの一部として使える機能」をアクションと呼ぶ
+  
+      # GitHub Actions上では、リポジトリのソースはデフォルトでは含まれていない
+      # そのため、actions/checkoutアクションを使用して、リポジトリのコードをクローンする
+      # これにより、ジョブがリポジトリのコードにアクセスできるようになる
+      - uses: actions/checkout@v4
+
+      # Renderにデプロイする
+      - name: Deploy
+        # 現在の GitHub Actions が実行されているブランチが main ブランチである場合にのみ、このステップを実行する
+        # GitHub Actions の github.ref 変数には、現在のリファレンス（ブランチやタグ）が含まれる
+        # refs/heads/main は main ブランチを表す
+        if: github.ref == 'refs/heads/main'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
