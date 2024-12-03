@@ -42,6 +42,17 @@ jobs:
       run: go build -v ./...
 
 # ステップの名前を Test に指定
-# go test コマンドを使用して、全てのテストを実行
+# go test コマンドを使用して、全てのテストを実行 & カバレッジを cover.txt として出力
     - name: Test
-      run: go test -v ./...
+      run: go test -v ./... -coverprofile=cover.txt
+
+# cover.txt を cover.html に変換
+    - name: create cover.html
+      run: go tool cover -html=cover.txt -o cover.html
+
+# cover.html をアップロード
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage
+        path: ./cover.html

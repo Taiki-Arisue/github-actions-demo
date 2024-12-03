@@ -15,7 +15,7 @@ jobs:
 
   # ジョブの名前を deploy に指定
   deploy:
-     # CI成功時のみ実行
+     # ジョブをCI成功時のみ実行
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     # 実行環境を指定
     runs-on: ubuntu-latest
