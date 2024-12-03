@@ -1,0 +1,47 @@
+# ワークフローの名前
+name: Go
+
+# トリガー / このワークフローが実行される条件を指定
+on:
+# mainブランチにコードがプッシュされたときに実行
+  push:
+    branches: [ "main" ]
+    
+# mainブランチに向けたプルリクエストが作成、更新、または再オープンされたときに実行
+  pull_request:
+    branches: [ "main" ]
+    
+# ジョブ / ワークフロー実行は、既定で並列実行される 1 つ以上の jobs で構成される
+jobs:
+# ジョブの名前を build に指定
+  build:
+# 実行環境を指定
+    runs-on: ubuntu-latest
+# 1 つのジョブには、steps と呼ばれる一連のタスクがある
+# ステップでは、コマンドを実行する、設定タスクを実行する、
+# あるいはリポジトリやパブリックリポジトリ、Dockerレジストリで公開されたアクションを実行することができる
+    steps:
+# usesでアクションを指定する
+# 「誰かか作った処理をそのままワークフローの一部として使える機能」をアクションと呼ぶ
+
+# GitHub Actions上では、リポジトリのソースはデフォルトでは含まれていない
+# そのため、actions/checkoutアクションを使用して、リポジトリのコードをクローンする
+# これにより、ジョブがリポジトリのコードにアクセスできるようになる
+    - uses: actions/checkout@v4
+
+# ステップの名前を Set up Go に指定
+# actions/setup-goアクションを使用して、Goの実行環境をセットアップ
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.22.3'
+        
+# ステップの名前を Biuld に指定
+# go build コマンドを使用して、全てのパッケージをコンパイル
+    - name: Build
+      run: go build -v ./...
+
+# ステップの名前を Test に指定
+# go test コマンドを使用して、全てのテストを実行
+    - name: Test
+      run: go test -v ./...
