@@ -175,7 +175,6 @@ By exploring this repository, you'll learn:
 - Basic Go project structure
 - Writing and running unit tests
 - Go module management
-- Cross-platform compilation
 
 ### DevOps Best Practices
 - Continuous Integration principles
