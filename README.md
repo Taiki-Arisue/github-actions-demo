@@ -180,13 +180,11 @@ By exploring this repository, you'll learn:
 - Continuous Integration principles
 - Automated testing strategies
 - Deployment automation
-- Workflow optimization
 
 ### Advanced Topics
 - Matrix builds for multiple platforms
 - Conditional workflow execution
 - Artifact management
-- Environment variables and secrets
 
 ## 🤝 Contributing
 
